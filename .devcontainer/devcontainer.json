@@ -1,0 +1,23 @@
+{
+	"name": "book-writer"
+	,
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	"forwardPorts": [5173],
+
+	"postCreateCommand": "npm i; npm run dev",
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"yzhang.markdown-all-in-one",
+				"antfu.vite",
+				"svelte.svelte-vscode",
+				"ms-vscode.vscode-typescript-next"
+			]
+		}
+	}	
+}
