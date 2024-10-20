@@ -1,21 +1,29 @@
 <script lang="ts">
+  import { Router, Link, Route } from "svelte-routing";
+  import Home from "./routes/Home.svelte";
+  import Writing from "./routes/Writing.svelte";
 
+  export let url = "";
+  const basepath: string = import.meta.env.VITE_BASE_URL || "";
+
+  const btnStyle = (active: Boolean) => {
+    return `btn ${active ? "btn-primary" : "btn-ghost"}`;
+  };
 </script>
 
-<svelte:head>
-  <title>Book writer</title>
-</svelte:head>
 
-<main>
-  <h1 class="text-3xl font-bold underline">Hello world !</h1>
+<Router {url} {basepath}>
+  <nav class="navbar">
+    <Link let:active to="{basepath}">
+      <div class="{btnStyle(active)}">Home</div>
+    </Link>
+    <Link let:active to="{basepath}/writing">
+      <div class="{btnStyle(active)}">Writing</div>
+    </Link>
+  </nav>
 
-  <button class="btn btn-primary rounded-full">Hello daisyui</button>
-</main>
-
-<style>
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-</style>
+  <div>
+    <Route path="/" component={Home} />
+    <Route path="/writing" component={Writing} />
+  </div>
+</Router>
