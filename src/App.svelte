@@ -13,17 +13,19 @@
 
 
 <Router {url} {basepath}>
-  <nav class="navbar">
-    <Link let:active to="{basepath}/">
-      <div class="{btnStyle(active)}">Home</div>
-    </Link>
-    <Link let:active to="{basepath}/writing">
-      <div class="{btnStyle(active)}">Writing</div>
-    </Link>
-  </nav>
+  <header>
+    <nav class="navbar gap-2">
+      <Link let:active to="{basepath}/">
+        <div class="{btnStyle(active)}">Home</div>
+      </Link>
+      <Link let:active to="{basepath}/writing">
+        <div class="{btnStyle(active)}">Writing</div>
+      </Link>
+    </nav>
+  </header>
 
-  <div>
+  <main class="m-auto">
     <Route path="/writing" component={Writing} />
     <Route path="*" component={Home} />
-  </div>
+  </main>
 </Router>

@@ -1,18 +1,10 @@
 
 
 <svelte:head>
-  <title>Book writer</title>
+  <title>Ecriture - Book writer</title>
 </svelte:head>
 
-<main>
+
+<div>
     <h1 class="text-3xl font-bold underline">Hello writing !</h1>
-
-</main>
-
-<style>
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-</style>
+</div>
