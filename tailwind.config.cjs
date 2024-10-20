@@ -4,6 +4,13 @@ module.exports = {
   content: ['./src/**/*.{svelte,js,ts}'],
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ["sunset"]
+    themes: [
+      {
+        custom: {
+          ...require("daisyui/src/theming/themes")["sunset"],
+          "--rounded-box": ".5rem",  
+        }
+      }
+    ]
   }
 };
