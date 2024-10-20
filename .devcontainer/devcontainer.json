@@ -7,7 +7,7 @@
 
 	"forwardPorts": [5173],
 
-	"postCreateCommand": "npm i; npm run dev",
+	"postCreateCommand": "npm i",
 
 	"customizations": {
 		"vscode": {
@@ -16,7 +16,10 @@
 				"yzhang.markdown-all-in-one",
 				"antfu.vite",
 				"svelte.svelte-vscode",
-				"ms-vscode.vscode-typescript-next"
+				"ms-vscode.vscode-typescript-next",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"GitHub.vscode-github-actions"
 			]
 		}
 	}	
