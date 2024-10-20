@@ -14,7 +14,7 @@
 
 <Router {url} {basepath}>
   <nav class="navbar">
-    <Link let:active to="{basepath}">
+    <Link let:active to="{basepath}/">
       <div class="{btnStyle(active)}">Home</div>
     </Link>
     <Link let:active to="{basepath}/writing">
@@ -23,7 +23,7 @@
   </nav>
 
   <div>
-    <Route path="/" component={Home} />
     <Route path="/writing" component={Writing} />
+    <Route path="*" component={Home} />
   </div>
 </Router>
