@@ -15,14 +15,14 @@
       <h2 class="card-title">Novembre</h2>
       <p>39540 mots - 28 jours</p>
       <div class="card-actions justify-end mt-6">
-        <a class="btn btn-s btn-ghost" href="./writing" use:link>Continuer ➡️</a>
+        <a class="btn btn-s btn-ghost text-primary" href="./writing" use:link>Continuer <i class="ph ph-arrow-right"></i></a>
       </div>
     </div>
   </section>
 
   <section class="mb-auto flex gap-10">
-    <button class="btn btn-s btn-ghost">Nouveau</button>
-    <button class="btn btn-s btn-ghost">Ouvrir</button>
+    <button class="btn btn-s btn-ghost text-primary">Nouveau</button>
+    <button class="btn btn-s btn-ghost text-primary">Ouvrir</button>
   </section>
 
   <hr class="w-1/3">  
