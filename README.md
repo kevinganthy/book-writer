@@ -6,16 +6,5 @@
 [DaisyUI](https://daisyui.com/components/button/) -
 [Icons](https://phosphoricons.com/)
 
-- [ ] Découpage en composants
-- [ ] Ajout des interractions
-- [ ] Animations
-- [ ] Mode focus
-- [ ] Trigger sur les modifications de contenu
-- [ ] With existing data
-  - [ ] Build components
-  - [ ] Stockage local
-  - [ ] Export json
-  - [ ] Open book
-- [ ] Without data
-  - [ ] Create book
+- [ ] insights chain day
 - [ ] Tests unitaires

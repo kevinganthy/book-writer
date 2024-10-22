@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { Router, Link, Route } from "svelte-routing";
+  import { Router, Route } from "svelte-routing";
   import Home from "./routes/Home.svelte";
   import Writing from "./routes/Writing.svelte";
-
+  
   export let url = "";
   const basepath: string = import.meta.env.VITE_BASE_URL || "";
-
-  const btnStyle = (active: Boolean) => {
-    return `btn ${active ? "btn-primary" : "btn-ghost"}`;
-  };
+  
+  import { restoreBook } from "./store";
+  restoreBook();
 </script>
 
 
