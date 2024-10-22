@@ -1,5 +1,32 @@
 <script lang="ts">
-    import { link } from "svelte-routing";
+  import Cover from "../components/Cover.svelte";
+  import { isBook, onUploadBook } from "../store";
+
+  let input: HTMLInputElement;
+
+  const openDialog = () => {
+    input.click()
+  };
+
+  const onFileSelected = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) {
+        return;
+    }
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.readAsText(file, "UTF-8");
+    reader.onload = (e) => {
+      const content = e.target?.result;
+      if ( content ) {
+        let json = JSON.parse(content.toString());
+        onUploadBook(json);
+      }
+    }
+  }
 </script>
 
 <svelte:head>
@@ -10,19 +37,15 @@
   <h1>Book writer</h1>
   <hr class="w-1/3">
 
-  <section class="card mt-auto border w-full max-w-xl">
-    <div class="card-body pb-2 pe-2">
-      <h2 class="card-title">Novembre</h2>
-      <p>39540 mots - 28 jours</p>
-      <div class="card-actions justify-end mt-6">
-        <a class="btn btn-s btn-ghost text-primary" href="./writing" use:link>Continuer <i class="ph ph-arrow-right"></i></a>
-      </div>
-    </div>
-  </section>
+  {#if $isBook}
+    <Cover />
+  {/if}
 
   <section class="mb-auto flex gap-10">
     <button class="btn btn-s btn-ghost text-primary">Nouveau</button>
-    <button class="btn btn-s btn-ghost text-primary">Ouvrir</button>
+    <button class="btn btn-s btn-ghost text-primary" on:click={openDialog}>Ouvrir</button>
+
+    <input bind:this={input} on:change={onFileSelected} type="file" name="book" class="hidden">
   </section>
 
   <hr class="w-1/3">  
