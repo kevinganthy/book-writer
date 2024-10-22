@@ -1,19 +1,24 @@
-import { readonly, writable } from 'svelte/store';
+import { readonly, writable, get } from 'svelte/store';
 import type { Book } from './types/Book';
 import type { Insights } from './types/Insights';
 import type { ContentItem } from './types/ContentItem';
+
+let timeoutId: number;
+const timeout = 1000;
 
 const wTitle = writable<string>('');
 const wInsights = writable<Insights>();
 const wIsBook = writable<boolean>(false);
 const wBook = writable<Book>();
 const wContent = writable<ContentItem[]>();
+const wSaveStatus = writable<number>(0);
 
 export const book = readonly(wBook);
 export const isBook = readonly(wIsBook);
 export const title = readonly(wTitle);
 export const insights = readonly(wInsights);
 export const content = readonly(wContent);
+export const saveStatus = readonly(wSaveStatus);
 
 
 export const restoreBook = async () => {
@@ -29,14 +34,7 @@ export const restoreBook = async () => {
 
 export const onUploadBook = async (value: Book) => {
     wBook.set(value);
-
-    if ('caches' in window) {
-        const cache = await caches.open('json-cache');
-        const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
-        const response = new Response(blob, { headers: { 'Content-Type': 'application/json' } });
-        const fakeRequest = new Request(`/book.json`);
-        await cache.put(fakeRequest, response);
-    }
+    sendToCache(value);
 };
 
 export const setValue = (key: string, value: any, id?: number) => {
@@ -59,14 +57,24 @@ export const setValue = (key: string, value: any, id?: number) => {
             });
             break;
     }
+
+    // Save only after seconds of inactivity
+    if ( timeoutId ) {
+        clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+        const newBook: Book = {
+            "title": get(title),
+            "insights": {
+                "days": get(wBook).insights.days,
+            },
+            "content": get(content),
+        };
+        onUploadBook(newBook);
+        timeoutId = 0;
+    }, timeout);
 };
 
-wTitle.subscribe(value => {
-    console.log('title', value);
-});
-wContent.subscribe(value => {
-    console.log('content', value);
-});
 
 
 const getConsecutiveDays = (days: string[]) => {
@@ -84,6 +92,26 @@ const getConsecutiveDays = (days: string[]) => {
     return count;
 };
 
+const sendToCache = async (value: Book) => {
+    if ('caches' in window) {
+        const cache = await caches.open('json-cache');
+        const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
+        const response = new Response(blob, { headers: { 'Content-Type': 'application/json' } });
+        const fakeRequest = new Request(`/book.json`);
+        await cache.put(fakeRequest, response);
+        wSaveStatus.set(1);
+    }
+    else {
+        wSaveStatus.set(-1);
+    }
+
+    setTimeout(() => {
+        wSaveStatus.set(0);
+    }, 2000);
+}
+
+
+
 
 wBook.subscribe(value => {
     if ( !value ) return;
@@ -100,7 +128,3 @@ wBook.subscribe(value => {
     });
     wContent.set(value.content.sort((a, b) => a.order - b.order));
 });
-
-
-
-

@@ -4,6 +4,7 @@
     import Bloc from "./Bloc.svelte";
     import Chapter from "./Chapter.svelte";
     import { content } from "../store";
+    import { get } from "svelte/store";
 
     const isNextChapter = (index: number) => {
         if (index === $content.length - 1) return false;
@@ -18,7 +19,7 @@
         
         <Creator title={isNextChapter(0)}/>
 
-        {#each $content as item, index}
+        {#each get(content) as item, index}
             {#if item.type === "chapter"}
                 <Chapter title={item.value} id={item.id}/>
                 <Creator/>
@@ -31,4 +32,4 @@
 
         <div class="mt-auto">
     </article>
-  {/if}
+{/if}

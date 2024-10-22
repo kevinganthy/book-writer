@@ -6,13 +6,11 @@
 [DaisyUI](https://daisyui.com/components/button/) -
 [Icons](https://phosphoricons.com/)
 
-- [ ] Stockage local
+- [ ] gestion des tags
+- [ ] ajout de bloc
 - [ ] Export json
-- [ ] Open book
-- [ ] Ajout des interractions
 - [ ] Animations
 - [ ] Mode focus
-- [ ] Trigger sur les modifications de contenu
-- [ ] Without data
-  - [ ] Create book
+- [ ] insights chain day
+- [ ] Create book
 - [ ] Tests unitaires
