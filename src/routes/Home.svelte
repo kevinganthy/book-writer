@@ -1,6 +1,6 @@
 <script lang="ts">
   import Cover from "../components/Cover.svelte";
-  import { isBook, onUploadBook } from "../store";
+  import { downloadBook, isBook, onUploadBook } from "../store";
 
   let input: HTMLInputElement;
 
@@ -27,6 +27,17 @@
       }
     }
   }
+
+  const newBook = () => {
+    downloadBook();
+    onUploadBook({
+      title: "Nouveau livre",
+      content: [],
+      insights: {
+        days: [],
+      }
+    });
+  }
 </script>
 
 <svelte:head>
@@ -42,7 +53,7 @@
   {/if}
 
   <section class="mb-auto flex gap-10">
-    <button class="btn btn-s btn-ghost text-primary">Nouveau</button>
+    <button class="btn btn-s btn-ghost text-primary" on:click={newBook}>Nouveau</button>
     <button class="btn btn-s btn-ghost text-primary" on:click={openDialog}>Ouvrir</button>
 
     <input bind:this={input} on:change={onFileSelected} type="file" name="book" class="hidden">

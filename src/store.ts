@@ -4,7 +4,7 @@ import type { Insights } from './types/Insights';
 import type { ContentItem } from './types/ContentItem';
 
 let timeoutId: number;
-const timeout = 1000;
+const timeout = 750;
 
 const wTitle = writable<string>('');
 const wInsights = writable<Insights>();
@@ -13,6 +13,7 @@ const wBook = writable<Book>();
 const wContent = writable<ContentItem[]>();
 const wSaveStatus = writable<number>(0);
 
+export const focusMode = writable<boolean>(false);
 export const book = readonly(wBook);
 export const isBook = readonly(wIsBook);
 export const title = readonly(wTitle);
@@ -37,7 +38,44 @@ export const onUploadBook = async (value: Book) => {
     sendToCache(value);
 };
 
+const saveBook = () => {
+    const newBook: Book = {
+        "title": get(title),
+        "insights": {
+            "days": get(wBook).insights.days,
+        },
+        "content": get(content),
+    };
+    wBook.set(newBook);
+    sendToCache(newBook);
+}
+
+export const downloadBook = () => {
+    const filename = `${get(wTitle).toLowerCase().replace(/ /g, '-')}_${(new Date()).toJSON()}.json`;
+    const json = JSON.stringify(get(wBook), null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.setAttribute('href', url)
+    a.setAttribute('download', filename)
+    a.click()
+};
+
+
+
 export const setValue = (key: string, value: any, id?: number) => {
+    const clean = (content: ContentItem[]) => {
+        return content.filter( c => {
+            if ( c.type === "bloc" && !c.value && !c.note && !c.tags?.length ) {
+                return null;
+            }
+            else if ( c.type === "chapter" && !c.value  ) {
+                return null;
+            }
+            return c;
+        })
+    };
+
     switch (key) {
         case 'title':
             wTitle.set(value);
@@ -45,34 +83,40 @@ export const setValue = (key: string, value: any, id?: number) => {
         case 'content.value':
             wContent.update(content => {
                 const index = content.findIndex(c => c.id === id);
-                content[index].value = value;
-                return content;
+                content[index].value = value.replace(/<br>/g, '\n');
+                return clean(content);
             });
             break;
         case 'content.note':
             wContent.update(content => {
                 const index = content.findIndex(c => c.id === id);
-                content[index].note = value;
-                return content;
+                content[index].note = value.replace(/<br>/g, '\n');
+                return clean(content);
+            });
+            break;
+        case 'content.tags':
+            wContent.update(content => {
+                const index = content.findIndex(c => c.id === id);
+                content[index].tags = value;
+                return clean(content);
             });
             break;
     }
 
     // Save only after seconds of inactivity
-    if ( timeoutId ) {
-        clearTimeout(timeoutId);
-    }
+    if ( timeoutId ) clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-        const newBook: Book = {
-            "title": get(title),
-            "insights": {
-                "days": get(wBook).insights.days,
-            },
-            "content": get(content),
-        };
-        onUploadBook(newBook);
+        saveBook();
         timeoutId = 0;
     }, timeout);
+};
+
+export const addContentItem = (item: ContentItem) => {
+    wContent.update(content => {
+        content.push(item);
+        return content;
+    });
+    saveBook();
 };
 
 
@@ -107,7 +151,7 @@ const sendToCache = async (value: Book) => {
 
     setTimeout(() => {
         wSaveStatus.set(0);
-    }, 2000);
+    }, 1500);
 }
 
 
@@ -126,5 +170,12 @@ wBook.subscribe(value => {
         days: value.insights.days.length,
         chain: getConsecutiveDays(value.insights.days),
     });
-    wContent.set(value.content.sort((a, b) => a.order - b.order));
+    wContent.set(
+        value.content
+            .sort((a, b) => a.order - b.order)
+            .map((c, index) => {
+                c.order = index + 1;
+                return c;
+            })
+    );
 });

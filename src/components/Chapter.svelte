@@ -1,24 +1,26 @@
 <script lang="ts">
     import { setValue } from "../store";
+    import type { ContentItem } from "../types/ContentItem";
+    import { focusMode } from "../store";
 
-    export let id: number;
-    export let title: string = "";
+    export let item: ContentItem;
 
     const onText = (event: KeyboardEvent) => {
-        const element = event.target as HTMLSpanElement;
-        setValue('content.value', element.innerText, id);
+        const element = event.target as HTMLInputElement;
+        setValue('content.value', element.value, item.id);
     }
 </script>
 
 
 <article class="mx-2 p-8 bg-neutral card">
-    <span contenteditable
-        tabindex="0"
-        role="textbox"
-        data-id={id}
+    {#if !$focusMode }
+        <p class="absolute text-neutral-content top-12 left-0 -translate-x-8">{item.order}</p>
+    {/if}
+
+    <input type="text"
+        data-id={item.id}
         on:keyup={onText}
-        class="text-base-100 text-xl w-full h-max text-justify focus:outline-none focus:border-none" 
-        placeholder="Commencer à écrire">
-        {title}
-    </span> 
+        value={item.value}
+        class="input text-base-100 bg-transparent text-xl" 
+        placeholder="Titre de chapitre">
 </article>

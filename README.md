@@ -6,11 +6,5 @@
 [DaisyUI](https://daisyui.com/components/button/) -
 [Icons](https://phosphoricons.com/)
 
-- [ ] gestion des tags
-- [ ] ajout de bloc
-- [ ] Export json
-- [ ] Animations
-- [ ] Mode focus
 - [ ] insights chain day
-- [ ] Create book
 - [ ] Tests unitaires
