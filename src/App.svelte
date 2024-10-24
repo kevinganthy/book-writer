@@ -2,6 +2,7 @@
   import { Router, Route } from "svelte-routing";
   import Home from "./routes/Home.svelte";
   import Writing from "./routes/Writing.svelte";
+  import Pwa from "./components/Pwa.svelte";
   
   export let url = "";
   const basepath: string = import.meta.env.VITE_BASE_URL || "";
@@ -11,6 +12,7 @@
 </script>
 
 
+<Pwa />
 <Router {url} {basepath}>
   <main class="bg-base-100">
     <Route path="/writing" component={Writing} />

@@ -33,6 +33,26 @@ export const restoreBook = async () => {
     }
 };
 
+const sendToCache = async (value: Book) => {
+    if ('caches' in window) {
+        const cache = await caches.open('json-cache');
+        const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
+        const response = new Response(blob, { headers: { 'Content-Type': 'application/json' } });
+        const fakeRequest = new Request(`/book.json`);
+        await cache.put(fakeRequest, response);
+        wSaveStatus.set(1);
+    }
+    else {
+        wSaveStatus.set(-1);
+    }
+
+    setTimeout(() => {
+        wSaveStatus.set(0);
+    }, 1500);
+}
+
+
+
 export const onUploadBook = async (value: Book) => {
     wBook.set(value);
     sendToCache(value);
@@ -136,23 +156,6 @@ const getConsecutiveDays = (days: string[]) => {
     return count;
 };
 
-const sendToCache = async (value: Book) => {
-    if ('caches' in window) {
-        const cache = await caches.open('json-cache');
-        const blob = new Blob([JSON.stringify(value)], { type: 'application/json' });
-        const response = new Response(blob, { headers: { 'Content-Type': 'application/json' } });
-        const fakeRequest = new Request(`/book.json`);
-        await cache.put(fakeRequest, response);
-        wSaveStatus.set(1);
-    }
-    else {
-        wSaveStatus.set(-1);
-    }
-
-    setTimeout(() => {
-        wSaveStatus.set(0);
-    }, 1500);
-}
 
 
 
