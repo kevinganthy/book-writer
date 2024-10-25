@@ -1,8 +1,27 @@
-# Book writer
+# Offline book writer
 
-[Figma](https://www.figma.com/design/YkgbIsgrzQO0LXvT2imgnu/Livre?node-id=0-1&node-type=canvas&t=gTLxKyI8RZzxalMi-0) - 
 [Github Page](https://kevinganthy.github.io/book-writer/)
 
 [DaisyUI](https://daisyui.com/components/button/) -
-[Icons](https://phosphoricons.com/)
+[Phosphor Icons](https://phosphoricons.com/)
 
+This app is an **entirely offline** book writer using PWA, ServiceWorker and local cache. Your **content is private** and exclusively stored in your browser. You can save your work in a JSON file.
+
+Write book easily with :
+
+- Mutliple blocks
+- Chapter
+- Tags
+- Quick notes
+
+A focus mode is available to help you concentrate on your writing. Maximise your motivation and productivity with insights and statistics.
+
+**Coming features :**
+
+- Drag and drop blocks to reorder them
+- Graphical insights
+- Preview mode
+
+---
+
+This app is free of use and open source. You can contribute to the project on [Github](https://github.com/kevinganthy/book-writer).
