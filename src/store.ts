@@ -188,6 +188,7 @@ wBook.subscribe(value => {
     wTitle.set(value.title);
     wInsights.set({
         words: value.content
+                    .filter(c => c.type === 'bloc')
                     .map(c => c.value.split(' ').length)
                     .reduce((a, b) => a + b, 0),
         today: value.insights.filter(i => i.date === (new Date()).toLocaleDateString())[0]?.words || 0,
