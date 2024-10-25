@@ -14,7 +14,7 @@
   </script>
 
 
-<article class="flex flex-col grow mx-auto max-w-3xl items-stretch gap-4">
+<article class="flex flex-col grow mx-auto max-w-3xl -translate-x-6 items-stretch gap-4">
     <Toolbar />
     
     {#if $content && $content.length}

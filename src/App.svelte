@@ -14,7 +14,7 @@
 
 <Pwa />
 <Router {url} {basepath}>
-  <main class="bg-base-100">
+  <main class="bg-base-100 overflow-hidden">
     <Route path="/writing" component={Writing} />
     <Route path="*" component={Home} />
   </main>

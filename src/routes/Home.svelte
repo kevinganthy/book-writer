@@ -33,9 +33,7 @@
     onUploadBook({
       title: "Nouveau livre",
       content: [],
-      insights: {
-        days: [],
-      }
+      insights: []
     });
   }
 </script>

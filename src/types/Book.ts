@@ -1,9 +1,12 @@
 import type { ContentItem } from "./ContentItem";
 
+export interface Insight {
+    date: string;
+    words: number;
+}
+
 export interface Book {
     title: string;
-    insights: {
-        days: string[]
-    }
+    insights: Insight[]
     content: ContentItem[]
 }

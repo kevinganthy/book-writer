@@ -6,9 +6,17 @@
 
     let noteElement: HTMLSpanElement;
     let articleElement: HTMLElement;
+    let wordCount = item.value ? item.value.split(' ').length : 0;
+    let delta = 0;
 
     const onText = (event: KeyboardEvent) => {
         const element = event.target as HTMLSpanElement;
+
+        const newCount = element.innerText ? element.innerText.split(' ').length : 0;
+        delta = newCount - wordCount;
+        wordCount = newCount;
+
+        setValue('wordCount', delta);
         setValue('content.value', element.innerText, item.id);
     }
 
@@ -50,16 +58,14 @@
         tags.push("");
         setValue('content.tags', tags, item.id);
         setTimeout(() => {
-            if ( articleElement ) {
-                const input = articleElement.querySelector(`.tags input[data-index="${tags.length - 1}"]`) as HTMLInputElement;
-                input.focus();
-            }
+            const input = document.querySelector(`#bloc-${item.id} .tags input[data-index="${tags.length - 1}"]`) as HTMLInputElement;
+            input.focus();
         }, 150);
     }
 </script>
 
 
-<article bind:this={articleElement} class="mx-2 p-8 bg-neutral card">
+<article bind:this={articleElement} class="mx-2 p-8 bg-neutral card" id="bloc-{item.id}">
     {#if !$focusMode }
         <p class="absolute text-neutral-content top-8 left-0 -translate-x-8">{item.order}</p>
     {/if}

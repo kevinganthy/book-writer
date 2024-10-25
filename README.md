@@ -6,5 +6,3 @@
 [DaisyUI](https://daisyui.com/components/button/) -
 [Icons](https://phosphoricons.com/)
 
-- [ ] insights chain day
-- [ ] Tests unitaires

@@ -1,5 +1,5 @@
 import { readonly, writable, get } from 'svelte/store';
-import type { Book } from './types/Book';
+import type { Book, Insight } from './types/Book';
 import type { Insights } from './types/Insights';
 import type { ContentItem } from './types/ContentItem';
 
@@ -12,6 +12,7 @@ const wIsBook = writable<boolean>(false);
 const wBook = writable<Book>();
 const wContent = writable<ContentItem[]>();
 const wSaveStatus = writable<number>(0);
+const wDelta = writable<number>(0);
 
 export const focusMode = writable<boolean>(false);
 export const book = readonly(wBook);
@@ -59,11 +60,26 @@ export const onUploadBook = async (value: Book) => {
 };
 
 const saveBook = () => {
+    const insights = get(wBook).insights;
+
+    // Find today's insights
+    const today = (new Date()).toLocaleDateString();
+    const todayIndex = insights.findIndex(i => i.date === today);
+   
+    if ( !insights[todayIndex] ) {
+        insights.push({
+            date: today,
+            words: get(wDelta)
+        });
+    }
+    else {
+        insights[todayIndex].words += get(wDelta);
+    }
+    wDelta.set(0);
+
     const newBook: Book = {
         "title": get(title),
-        "insights": {
-            "days": get(wBook).insights.days,
-        },
+        "insights": insights,
         "content": get(content),
     };
     wBook.set(newBook);
@@ -121,6 +137,9 @@ export const setValue = (key: string, value: any, id?: number) => {
                 return clean(content);
             });
             break;
+        case 'wordCount':
+            wDelta.update(d => d + value);
+            break;
     }
 
     // Save only after seconds of inactivity
@@ -141,16 +160,18 @@ export const addContentItem = (item: ContentItem) => {
 
 
 
-const getConsecutiveDays = (days: string[]) => {
-    const dates: number[] = days.map(day => (new Date(day)).getTime())
+const getConsecutiveDays = (insights: Insight[]) => {
+    const dates = insights.filter(i => i.words > 0)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .reverse()
+        .map(i => i.date.split('/').reverse().join('/'))
+        .map(day => (new Date(day)).getTime())
         .sort((a, b) => a + b);
-
+    
     let count = 1;
     for (let index = 0; index < dates.length; index++) {
-        const delta = dates[index] - dates[index+1];
-        if (delta > 1000 * 60 *60 * 24) {
-            break;
-        }
+        if ( index === dates.length - 1 ) break;
+        if (dates[index] - dates[index+1] > 1000 * 60 *60 * 24) break;
         count++;
     }
     return count;
@@ -169,9 +190,9 @@ wBook.subscribe(value => {
         words: value.content
                     .map(c => c.value.split(' ').length)
                     .reduce((a, b) => a + b, 0),
-        today: 0,
-        days: value.insights.days.length,
-        chain: getConsecutiveDays(value.insights.days),
+        today: value.insights.filter(i => i.date === (new Date()).toLocaleDateString())[0]?.words || 0,
+        days: value.insights.length,
+        chain: getConsecutiveDays(value.insights),
     });
     wContent.set(
         value.content
