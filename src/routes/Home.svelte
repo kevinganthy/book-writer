@@ -29,7 +29,7 @@
   }
 
   const newBook = () => {
-    downloadBook();
+    if ( $isBook ) downloadBook();
     onUploadBook({
       title: "Nouveau livre",
       content: [],
@@ -48,6 +48,8 @@
 
   {#if $isBook}
     <Cover />
+  {:else}
+    <p class="text-center mt-auto">Aucun livre en cours d'écriture.</p>
   {/if}
 
   <section class="mb-auto flex gap-10">
